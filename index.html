@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapur Aida | Selamat Datang</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cream-bright: #ffffff;
+            --cream-accent: #fff9e5;
+            --bg-dark: #120a07;
+            --card-inner: #1d110b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--cream-bright);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #23150e 0%, #050302 100%);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .brand-box { margin-bottom: 40px; }
+        .brand-box span {
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            color: var(--cream-accent);
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+        .brand-box h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            margin: 0;
+            color: var(--cream-bright);
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+            line-height: 1.2;
+        }
+
+        /* PERUBAHAN DISINI: Grid dibuat selalu menyamping dan tidak slide */
+        .location-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+            flex-wrap: nowrap; /* Memastikan tidak turun ke bawah */
+        }
+
+        .card-wrapper {
+            position: relative;
+            flex: 0 1 350px; /* Ukuran fleksibel tapi tetap dalam baris */
+            height: 480px;
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            min-width: 0; /* Menghindari overflow pada flex item */
+        }
+
+        .loc-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--card-inner);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .loc-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.55;
+            transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 0;
+            filter: contrast(110%);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 5, 3, 0.98) 5%, transparent 60%);
+            z-index: 1;
+        }
+
+        .card-inner {
+            position: relative;
+            z-index: 2;
+            transform: translateZ(50px);
+            text-align: left;
+        }
+
+        .card-inner h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--cream-bright);
+            margin: 0;
+            line-height: 1;
+        }
+
+        .card-inner p {
+            color: var(--cream-accent);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .circle-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 45px; height: 45px;
+            border: 2px solid var(--cream-bright);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            z-index: 3;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .circle-btn::after {
+            content: '→';
+            color: var(--cream-bright);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Hover Effect Desktop */
+        @media (min-width: 992px) {
+            .card-wrapper:hover .loc-img { transform: scale(1.1); opacity: 0.8; }
+            .card-wrapper:hover .loc-card { 
+                border-color: var(--cream-bright); 
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.15); 
+            }
+            .card-wrapper:hover .circle-btn { 
+                background: var(--cream-bright); 
+                transform: rotate(-45deg) scale(1.1); 
+            }
+            .card-wrapper:hover .circle-btn::after { color: #000; }
+        }
+
+        /* Mobile Adjustment: Tetap Berdampingan */
+        @media (max-width: 600px) {
+            .location-grid {
+                gap: 12px;
+                padding: 5px;
+            }
+            .card-wrapper {
+                height: 320px; /* Lebih pendek di HP agar pas */
+                flex: 1; /* Membagi layar rata dua */
+            }
+            .loc-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+            .circle-btn {
+                width: 35px; height: 35px;
+                top: 15px; right: 15px;
+            }
+            .brand-box h1 { font-size: 1.5rem; }
+        }
+
+        footer {
+            margin-top: 30px;
+            color: var(--cream-accent);
+            opacity: 0.8;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-canvas"></div>
+
+    <div class="main-container">
+        <header class="brand-box">
+            <span>DAPUR AIDA </span>
+            <h1>SELAMAT DATANG DI<br>FORMULIR PEMESANAN</h1>
+            <p style="color: var(--cream-accent); letter-spacing: 3px; font-size: 0.75rem; margin-top: 15px; opacity: 0.8;">SILAKAN PILIH LOKASI ANDA</p>
+        </header>
+
+        <div class="location-grid">
+            <div class="card-wrapper" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+                <a href="tms.html" class="loc-card">
+                    <div class="loc-img" style="background-image: url('tms2.jpeg');"></div>
+                    <div class="overlay"></div>
+                    <div class="circle-btn"></div>
+                    <div class="card-inner">
+                        <p>Pilihan 01</p>
+                        <h2>TMS</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card-wrapper" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+                <a href="cks.html" class="loc-card">
+                    <div class="loc-img" style="background-image: url('cks2.jpeg');"></div>
+                    <div class="overlay"></div>
+                    <div class="circle-btn"></div>
+                    <div class="card-inner">
+                        <p>Pilihan 02</p>
+                        <h2>CKS</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 DAPUR AIDA • KUALITAS RASA NOMOR SATU
+        </footer>
+    </div>
+
+    <script>
+        function tilt(e, element) {
+            if (window.innerWidth > 900) {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 15;
+                const rotateY = (centerX - x) / 15;
+                element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
+        }
+        function resetTilt(element) {
+            element.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+        }
+    </script>
+</body>
+</html>

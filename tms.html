@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapur Aida - Premium Bites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #120a07;         
+            --card-inner: #1d110b;      
+            --gold-soft: #f0c697;
+            --gold-glow: rgba(240, 198, 151, 0.8);
+            --text-main: #ffffff;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            font-family: 'Outfit', sans-serif; 
+            color: var(--text-main);
+            background-image: radial-gradient(circle at center, #23150e 0%, #050302 100%);
+            background-attachment: fixed;
+        }
+        
+        .hero-section { 
+            background: linear-gradient(135deg, #2a1810, #120a07); 
+            padding: 60px 0 80px 0; 
+            text-align: center; 
+            border-bottom: 2px solid rgba(240, 198, 151, 0.3);
+        }
+
+        .hero-section h1 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+        }
+
+        .product-card { 
+            border: 1.5px solid rgba(255, 249, 229, 0.25); 
+            border-radius: 30px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
+            overflow: hidden; 
+            margin-top: -40px; 
+            margin-bottom: 40px;
+            background: var(--card-inner);
+            backdrop-filter: blur(10px);
+        }
+
+        .foto-container {
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-best {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--gold-soft);
+            color: #000;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            z-index: 5;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .price-main {
+            position: absolute;
+            bottom: 35px;
+            left: 35px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: var(--gold-soft);
+            padding: 8px 22px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            border: 1.5px solid var(--gold-soft);
+            z-index: 5;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Foto Utama: Dipotong (Crop) menyesuaikan instruksi */
+        .foto-cilok { 
+            width: 100%; 
+            height: 320px; /* Diperpendek agar lebih proporsional */
+            object-fit: cover; 
+            border-radius: 20px;
+            animation: slowZoom 10s infinite alternate;
+        }
+
+        @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+        /* Gallery: Menampilkan 3 foto ke samping, sisanya slide */
+        .gallery-wrapper {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 20px;
+            scrollbar-width: none; /* Hilangkan scrollbar di Firefox */
+            scroll-snap-type: x mandatory;
+        }
+        .gallery-wrapper::-webkit-scrollbar { display: none; } /* Hilangkan scrollbar di Chrome/Safari */
+
+        .gallery-item { 
+            flex: 0 0 calc(33.333% - 8px); /* Tepat 3 foto di layar */
+            position: relative; 
+            scroll-snap-align: start;
+            min-width: 100px;
+        }
+
+        @media (max-width: 576px) {
+            .gallery-item { flex: 0 0 calc(33.333% - 8px); } /* Tetap 3 foto di layar HP kecil */
+            .foto-cilok { height: 250px; } /* Lebih pendek lagi di HP */
+        }
+
+        .gallery-item img { 
+            width: 100%; 
+            height: 120px; /* Ukuran foto gallery disesuaikan */
+            object-fit: cover; 
+            border-radius: 15px; 
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .gallery-item::after {
+            content: attr(data-price);
+            position: absolute; top: 6px; left: 6px;
+            background: var(--gold-soft); color: #000;
+            padding: 2px 8px; border-radius: 6px;
+            font-size: 0.6rem; font-weight: 800;
+        }
+
+        .product-title-sm {
+            font-size: 0.85rem; font-weight: 700; color: var(--gold-soft);
+            margin-top: 8px; display: block;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Form & Label Colors */
+        .white-text { color: #ffffff !important; }
+        .gold-text { color: var(--gold-soft) !important; }
+
+        .menu-box {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(240, 198, 151, 0.4);
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-color: var(--gold-soft);
+            box-shadow: 0 0 10px var(--gold-glow);
+            outline: none;
+        }
+        .form-control::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .form-control:focus::placeholder { color: rgba(0, 0, 0, 0.4); }
+
+        .total-container {
+            background: rgba(240, 198, 151, 0.05);
+            border: 2px solid var(--gold-soft);
+            border-radius: 18px;
+            padding: 25px; margin-bottom: 25px; text-align: center;
+        }
+
+        #liveTotal { color: var(--gold-soft); font-weight: 800; text-shadow: 0 0 15px var(--gold-glow); }
+
+        .btn-pesan { 
+            background: var(--gold-soft); color: #000; 
+            border: none; padding: 18px; font-weight: 800; 
+            border-radius: 15px; font-family: 'Cinzel', serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pesan:disabled {
+            background: #2a1810 !important;
+            color: var(--gold-soft) !important;
+            border: 1px solid var(--gold-soft) !important;
+            cursor: not-allowed; opacity: 1;
+        }
+
+        .wa-float {
+            position: fixed; width: 60px; height: 60px;
+            bottom: 30px; right: 30px; background-color: #25d366;
+            border-radius: 50px; display: flex; align-items: center;
+            justify-content: center; z-index: 1000;
+        }
+
+        footer { text-align: center; padding: 40px 0; opacity: 0.6; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <h1>DAPUR AIDA</h1>
+    <p style="letter-spacing: 5px; font-size: 0.75rem; color: var(--gold-soft); text-transform: uppercase;">Premium Culinary Experience</p>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card product-card">
+                <div class="foto-container text-center">
+                    <span class="badge-best">🔥 BEST SELLER</span>
+                    <span class="price-main">NT$ 120</span>
+                    <img src="poster baru.png" class="foto-cilok" alt="Cilok Utama">
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="gallery-wrapper mb-5 text-center">
+                        <div class="gallery-item" data-price="NT$ 100">
+                            <img src="ceker1.jpeg" alt="Ceker Mercon">
+                            <span class="product-title-sm">Ceker Mercon</span>
+                        </div>
+                        <div class="gallery-item" data-price="NT$ 120">
+                            <img src="siomay1.jpeg" alt="Siomay">
+                            <span class="product-title-sm">Siomay</span>
+                        </div>
+                        <div class="gallery-item" data-price="NT$ 120">
+                            <img src="siomay2.jpeg" alt="Siomay">
+                            <span class="product-title-sm">Siomay</span>
+                        </div>
+                        <div class="gallery-item" data-price="NT$ 100">
+                            <img src="cilokb.jpeg" alt="Cilok Bumbu Kacang">
+                            <span class="product-title-sm">Cilok Bumbu Kacang</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <h2 class="white-text" style="font-family: 'Cinzel', serif; letter-spacing: 2px;">RESERVASI PESANAN</h2>
+                        <div style="width: 50px; height: 2px; background: var(--gold-soft); margin: 15px auto;"></div>
+                    </div>
+
+                    <form id="orderForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold white-text">Nama Lengkap</label>
+                                <input type="text" name="Nama_Lengkap" class="form-control" placeholder="Nama anda..." required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold white-text">TikTok</label>
+                                <input type="text" name="Nama_TikTok" class="form-control" placeholder="username" required>
+                            </div>
+                        </div>
+
+                        <div class="menu-box">
+                            <label class="form-label fw-bold mb-4 gold-text">PILIHAN MENU :</label>
+                            
+                            <div class="row mb-3 align-items-center white-text">
+                                <div class="col-8"><span>1. Cilok Kuah</span></div>
+                                <div class="col-4"><input type="number" name="Cilok_Kuah" class="form-control text-center qty-input" data-price="120" min="0" value="0"></div>
+                            </div>
+                            <div class="row mb-3 align-items-center white-text">
+                                <div class="col-8"><span>2. Ceker Mercon Pedas</span></div>
+                                <div class="col-4"><input type="number" name="Ceker_Mercon" class="form-control text-center qty-input" data-price="100" min="0" value="0"></div>
+                            </div>
+                            <div class="row mb-3 align-items-center white-text">
+                                <div class="col-8"><span>3. Siomay</span></div>
+                                <div class="col-4"><input type="number" name="Siomay" class="form-control text-center qty-input" data-price="120" min="0" value="0"></div>
+                            </div>
+                            <div class="row align-items-center white-text">
+                                <div class="col-8"><span>4. Cilok Bumbu Kacang</span></div>
+                                <div class="col-4"><input type="number" name="Cilok_Bumbu_Kacang" class="form-control text-center qty-input" data-price="100" min="0" value="0"></div>
+                            </div>
+                        </div>
+
+                        <div class="total-container">
+                            <span class="fw-bold text-uppercase white-text" style="font-size: 0.8rem; opacity: 0.8;">Estimasi Total Pembayaran</span>
+                            <div id="liveTotal" class="fs-1">NT$ 0</div>
+                            <input type="hidden" name="Total_harga" id="hiddenTotal" value="NT$ 0">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold white-text">Titik Pengambilan</label>
+                            <input type="text" name="Tempat_Pengambilan" class="form-control" placeholder="Contoh: TMS " required>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label fw-bold white-text">Catatan Khusus</label>
+                            <textarea name="Keterangan_Pesanan" class="form-control" rows="3" placeholder="Pisah sambal, dsb." required></textarea>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn-pesan w-100 shadow-sm">KONFIRMASI PESANAN SEKARANG</button>
+                    </form>
+
+                    <div id="msg" class="mt-4 alert alert-dark text-center fw-bold" style="display:none; border: 2px solid var(--gold-soft); color: var(--gold-soft); background: rgba(0,0,0,0.4);">
+                        ✅ PESANAN BERHASIL DITERIMA!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 DAPUR AIDA • THE ART OF LOCAL TASTE
+</footer>
+
+<a href="https://wa.me/6283134215058?text=Halo%20Admin%20Aida,%20saya%20ingin%20tanya%20pesanan" class="wa-float" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="30" height="30" alt="WA">
+</a>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz1cbJtwdscWYn2hrkvEqaR-CTEsweiTFUNWhDr_bmKty0QiWZ4ueejdj5LhAUtNCNKWA/exec'
+    const form = document.getElementById('orderForm')
+    const btn = document.getElementById('submitBtn')
+    const msg = document.getElementById('msg')
+    const inputs = document.querySelectorAll('.qty-input');
+    const totalDisplay = document.getElementById('liveTotal');
+    const hiddenTotalInput = document.getElementById('hiddenTotal');
+
+    function updateTotal() {
+        let total = 0;
+        inputs.forEach(input => {
+            const price = parseInt(input.getAttribute('data-price'));
+            const qty = parseInt(input.value) || 0;
+            total += (price * qty);
+        });
+        totalDisplay.innerText = `NT$ ${total}`;
+        hiddenTotalInput.value = `NT$ ${total}`;
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', updateTotal);
+    });
+
+    form.addEventListener('submit', e => {
+        e.preventDefault()
+        btn.disabled = true
+        btn.innerText = "⏳ PROCESSING..."
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                btn.disabled = false
+                btn.innerText = "KONFIRMASI PESANAN SEKARANG"
+                msg.style.display = "block"
+                form.reset()
+                updateTotal(); 
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                setTimeout(() => { msg.style.display = "none"; }, 5000);
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan. Silakan coba lagi.')
+                btn.disabled = false
+                btn.innerText = "KONFIRMASI PESANAN SEKARANG"
+            })
+    })
+</script>
+</body>
+</html>

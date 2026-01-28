@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapur Aida - Premium Bites</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Outfit:wght@200;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream-bright: #ffffff;
+            --cream-accent: #fffdf5;
+            --bg-dark: #120a07;         
+            --card-inner: #1d110b;      
+            --gold-soft: #f0c697;       /* Gold Terang */
+            --text-main: #ffffff;
+            --gold-glow: rgba(240, 198, 151, 0.8);
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            font-family: 'Outfit', sans-serif; 
+            color: var(--text-main);
+            background-image: radial-gradient(circle at center, #23150e 0%, #050302 100%);
+            background-attachment: fixed;
+        }
+        
+        .hero-section { 
+            background: linear-gradient(135deg, #2a1810, #120a07); 
+            color: var(--cream-bright); 
+            padding: 60px 0 80px 0; 
+            text-align: center; 
+            border-bottom: 2px solid rgba(240, 198, 151, 0.3);
+        }
+
+        .hero-section h1 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .product-card { 
+            border: 1.5px solid rgba(255, 249, 229, 0.25); 
+            border-radius: 30px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
+            overflow: hidden; 
+            margin-top: -40px; 
+            margin-bottom: 40px;
+            background: var(--card-inner);
+            backdrop-filter: blur(10px);
+        }
+
+        .foto-container {
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            position: relative;
+        }
+
+        .badge-best {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--gold-soft);
+            color: #000;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            z-index: 5;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .price-main {
+            position: absolute;
+            bottom: 35px;
+            left: 35px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: var(--gold-soft);
+            padding: 8px 22px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            border: 1.5px solid var(--gold-soft);
+            z-index: 5;
+            text-shadow: 0 0 10px var(--gold-glow);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(240, 198, 151, 0.2);
+        }
+
+        /* Update Foto Utama: Lebih Pendek (Crop) */
+        .foto-cilok { 
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover; 
+            border-radius: 20px;
+            filter: contrast(105%) brightness(100%);
+        }
+
+        /* Update Gallery: Tampilan 3 Foto Menyamping & Scrollable */
+        .gallery {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 12px;
+            padding-bottom: 20px;
+            scrollbar-width: none;
+        }
+
+        .gallery::-webkit-scrollbar { display: none; }
+
+        .gallery-item {
+            flex: 0 0 calc(33.333% - 12px); /* Tampilan 3 foto di desktop */
+            scroll-snap-align: start;
+            position: relative;
+            min-width: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .foto-cilok { height: 220px; } /* Lebih pendek di HP */
+            .gallery-item { 
+                flex: 0 0 31%; /* Menampilkan 3 foto kecil di layar HP */
+            }
+        }
+
+        .gallery-item::after {
+            display: block;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #000;
+            background: var(--gold-soft);
+            z-index: 10;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .gallery-item:nth-child(1)::after { content: "NT$ 100"; }
+        .gallery-item:nth-child(2)::after { content: "NT$ 120"; }
+        .gallery-item:nth-child(3)::after { content: "NT$ 120"; }
+        .gallery-item:nth-child(4)::after { content: "NT$ 100"; }
+
+        .gallery-item img { 
+            width: 100%; 
+            height: 120px; 
+            object-fit: cover; 
+            border-radius: 12px; 
+            border: 1.5px solid rgba(255,255,255,0.15);
+        }
+
+        .product-title-sm {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--gold-soft);
+            margin-top: 8px;
+            display: block;
+            text-shadow: 0 0 8px rgba(240, 198, 151, 0.4);
+        }
+
+        .product-desc {
+            font-size: 0.7rem;
+            color: #e0e0e0;
+            opacity: 0.8;
+            line-height: 1.2;
+        }
+
+        /* --- SISA CSS TETAP SAMA --- */
+        .menu-box {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--gold-soft);
+            margin-bottom: 25px;
+        }
+
+        .menu-box span.fw-semibold {
+            color: #ffffff; 
+            font-size: 1.05rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .form-label { 
+            color: #ffffff !important; 
+            font-weight: 600;
+            font-size: 0.95rem; 
+        }
+        
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .total-container {
+            background: rgba(240, 198, 151, 0.05);
+            border: 2px solid var(--gold-soft);
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(240, 198, 151, 0.1);
+        }
+
+        #liveTotal { 
+            color: var(--gold-soft); 
+            font-weight: 800; 
+            text-shadow: 0 0 20px var(--gold-glow), 0 0 40px rgba(240, 198, 151, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .btn-pesan { 
+            background: var(--gold-soft);
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            font-weight: 800; 
+            border-radius: 15px; 
+            font-family: 'Cinzel', serif;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-pesan:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .btn-pesan:disabled {
+            background: #2a1810;
+            color: var(--gold-soft);
+            border: 1px solid var(--gold-soft);
+            opacity: 1;
+            text-shadow: 0 0 15px var(--gold-glow);
+            box-shadow: 0 0 30px rgba(240, 198, 151, 0.4);
+            letter-spacing: 2px;
+            cursor: not-allowed;
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(240, 198, 151, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(240, 198, 151, 0.6); }
+            100% { box-shadow: 0 0 10px rgba(240, 198, 151, 0.2); }
+        }
+
+        .wa-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 15px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #ffffff;
+            opacity: 0.7;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <h1 class="fw-bold">DAPUR AIDA</h1>
+    <p style="letter-spacing: 5px; font-size: 0.75rem; color: var(--gold-soft); text-transform: uppercase; font-weight: 600;">Premium Culinary Experience</p>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card product-card">
+                <div class="foto-container text-center">
+                    <span class="badge-best">🔥 BEST SELLER</span>
+                    <span class="price-main">NT$ 120</span>
+                    <img src="poster baru.png" class="foto-cilok" alt="Cilok Utama">
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="gallery mb-5 text-center">
+                        <div class="gallery-item">
+                            <img src="ceker1.jpeg" alt="Ceker Mercon">
+                            <span class="product-title-sm">Ceker Mercon</span>
+                            <p class="product-desc">Pedas membara.</p>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="siomay1.jpeg" alt="Siomay">
+                            <span class="product-title-sm">Siomay</span>
+                            <p class="product-desc">Bahan Berkualitas.</p>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="siomay2.jpeg" alt="Siomay 2">
+                            <span class="product-title-sm">Siomay</span>
+                            <p class="product-desc">Bahan premium.</p>
+                        </div>
+                        <div class="gallery-item">
+                            <img src="cilokb.jpeg" alt="Cilok Bumbu Kacang">
+                            <span class="product-title-sm">Cilok Kacang</span>
+                            <p class="product-desc">Bumbu kental.</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-5">
+                        <h2 style="font-family: 'Cinzel', serif; color: #ffffff; letter-spacing: 2px; font-weight: 700;">RESERVASI PESANAN</h2>
+                        <div style="width: 60px; height: 3px; background: var(--gold-soft); margin: 15px auto;"></div>
+                    </div>
+
+                    <form id="orderForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" name="Nama_Lengkap" class="form-control" placeholder="nama anda..." required>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label"> TikTok</label>
+                                <input type="text" name="Nama_TikTok" class="form-control" placeholder="username" required>
+                            </div>
+                        </div>
+
+                        <div class="menu-box">
+                            <label class="form-label fw-bold mb-4" style="color: var(--gold-soft); text-transform: uppercase;">Pilihan Menu :</label>
+                            
+                            <div class="row mb-4 align-items-center">
+                                <div class="col-8"><span class="fw-semibold">1. Cilok Kuah </span></div>
+                                <div class="col-4"><input type="number" name="Cilok_Kuah" class="form-control text-center qty-input" data-price="120" min="0" value="0"></div>
+                            </div>
+                            <div class="row mb-4 align-items-center">
+                                <div class="col-8"><span class="fw-semibold">2. Ceker Mercon Pedas</span></div>
+                                <div class="col-4"><input type="number" name="Ceker_Mercon" class="form-control text-center qty-input" data-price="100" min="0" value="0"></div>
+                            </div>
+                            <div class="row mb-4 align-items-center">
+                                <div class="col-8"><span class="fw-semibold">3. Siomay </span></div>
+                                <div class="col-4"><input type="number" name="Siomay" class="form-control text-center qty-input" data-price="120" min="0" value="0"></div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-8"><span class="fw-semibold">4. Cilok Bumbu Kacang</span></div>
+                                <div class="col-4"><input type="number" name="Cilok_Bumbu_Kacang" class="form-control text-center qty-input" data-price="100" min="0" value="0"></div>
+                            </div>
+                        </div>
+
+                        <div class="total-container">
+                            <span class="fw-bold text-uppercase" style="letter-spacing: 2px; font-size: 0.8rem; color: #ffffff; opacity: 0.8;">Estimasi Pembayaran</span>
+                            <div id="liveTotal" class="fw-bold fs-1">NT$ 0</div>
+                            <input type="hidden" name="Total_harga" id="hiddenTotal" value="NT$ 0">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Titik Pengambilan</label>
+                            <input type="text" name="Tempat_Pengambilan" class="form-control" placeholder="Contoh: CKS " required>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label">Catatan Khusus</label>
+                            <textarea name="Keterangan_Pesanan" class="form-control" rows="3" placeholder="Contoh: Pisah sambal, dsb." required></textarea>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn-pesan w-100 shadow-sm">KONFIRMASI PESANAN SEKARANG</button>
+                    </form>
+
+                    <div id="msg" class="mt-4 alert alert-dark text-center fw-bold" style="display:none; border: 2px solid var(--gold-soft); color: var(--gold-soft); background: rgba(0,0,0,0.6);">
+                        ✅ PESANAN BERHASIL DITERIMA!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 DAPUR AIDA • THE ART OF LOCAL TASTE
+</footer>
+
+<a href="https://wa.me/6283134215058?text=Halo%20Admin%20Aida,%20saya%20ingin%20bertanya%20tentang%20pesanan%20saya" class="wa-float" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="35" height="35" alt="WhatsApp">
+</a>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwNCduH1PR70dh8PvgZeQD0_wckQPR4-_eZoY1Ld3qoJi2ibf8P6FdCnVr4BiD5a9GlUg/exec'
+    const form = document.getElementById('orderForm')
+    const btn = document.getElementById('submitBtn')
+    const msg = document.getElementById('msg')
+    const inputs = document.querySelectorAll('.qty-input');
+    const totalDisplay = document.getElementById('liveTotal');
+    const hiddenTotalInput = document.getElementById('hiddenTotal');
+
+    function updateTotal() {
+        let total = 0;
+        inputs.forEach(input => {
+            const price = parseInt(input.getAttribute('data-price'));
+            const qty = parseInt(input.value) || 0;
+            total += (price * qty);
+        });
+        totalDisplay.innerText = `NT$ ${total}`;
+        hiddenTotalInput.value = `NT$ ${total}`;
+    }
+
+    inputs.forEach(input => {
+        input.addEventListener('input', updateTotal);
+    });
+
+    form.addEventListener('submit', e => {
+        e.preventDefault()
+        btn.disabled = true
+        btn.innerText = "⏳ PROCESSING..."
+        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                btn.disabled = false
+                btn.innerText = "KONFIRMASI PESANAN SEKARANG"
+                msg.style.display = "block"
+                form.reset()
+                updateTotal(); 
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                setTimeout(() => { msg.style.display = "none"; }, 5000);
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan. Silakan coba lagi.')
+                btn.disabled = false
+                btn.innerText = "KONFIRMASI PESANAN SEKARANG"
+            })
+    })
+</script>
+</body>
+</html>
